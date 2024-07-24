@@ -7,7 +7,6 @@ from torch import fx
 from ._irreps import Irreps
 from ._commons import prod
 from e3nn.util.codegen import CodeGenMixin
-from e3nn.util.jit import compile_mode
 
 from ._tensor_product._codegen import _sum_tensors
 
@@ -19,7 +18,6 @@ class Instruction(NamedTuple):
     path_weight: float
 
 
-@compile_mode("script")
 class Linear(CodeGenMixin, torch.nn.Module):
     r"""Linear operation equivariant to :math:`O(3)`
 
