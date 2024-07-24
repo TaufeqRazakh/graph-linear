@@ -4,6 +4,14 @@ from torch._dynamo import reset
 from torch._dynamo.eval_frame import optimize
 
 
+def prod(x):
+    """Compute the product of a sequence."""
+    out = 1
+    for a in x:
+        out *= a
+    return out
+
+
 def get_graph_breaks(f: torch.nn.Module, *extra_args, **extra_kwargs) -> Tuple[int, int]:
     """
 

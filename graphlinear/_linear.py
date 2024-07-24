@@ -4,9 +4,8 @@ from opt_einsum_fx import optimize_einsums_full
 import torch
 from torch import fx
 
-import e3nn
-from e3nn import o3
-from e3nn.util import prod
+from ._irreps import Irreps
+from ._commons import prod
 from e3nn.util.codegen import CodeGenMixin
 from e3nn.util.jit import compile_mode
 
@@ -35,15 +34,15 @@ class Linear(CodeGenMixin, torch.nn.Module):
 
         To make them equivalent, simplify ``irreps_in`` before constructing network modules:
 
-            o3.Irreps("3x0e + 7x0e").simplify()  # => 10x0e
+            Irreps("3x0e + 7x0e").simplify()  # => 10x0e
 
 
     Parameters
     ----------
-    irreps_in : `e3nn.o3.Irreps`
+    irreps_in : `e3nn.Irreps`
         representation of the input
 
-    irreps_out : `e3nn.o3.Irreps`
+    irreps_out : `e3nn.Irreps`
         representation of the output
 
     internal_weights : bool
@@ -106,8 +105,8 @@ class Linear(CodeGenMixin, torch.nn.Module):
 
     def __init__(
         self,
-        irreps_in: o3.Irreps,
-        irreps_out: o3.Irreps,
+        irreps_in: Irreps,
+        irreps_out: Irreps,
         *,
         f_in: Optional[int] = None,
         f_out: Optional[int] = None,
@@ -122,8 +121,8 @@ class Linear(CodeGenMixin, torch.nn.Module):
 
         assert path_normalization in ["element", "path"]
 
-        irreps_in = o3.Irreps(irreps_in)
-        irreps_out = o3.Irreps(irreps_out)
+        irreps_in = Irreps(irreps_in)
+        irreps_out = Irreps(irreps_out)
 
         if instructions is None:
             # By default, make all possible connections
@@ -332,8 +331,8 @@ class Linear(CodeGenMixin, torch.nn.Module):
 
 
 def _codegen_linear(
-    irreps_in: o3.Irreps,
-    irreps_out: o3.Irreps,
+    irreps_in: Irreps,
+    irreps_out: Irreps,
     instructions: List[Instruction],
     f_in: Optional[int] = None,
     f_out: Optional[int] = None,
