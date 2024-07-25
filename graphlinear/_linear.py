@@ -6,9 +6,9 @@ from torch import fx
 
 from ._irreps import Irreps
 from ._commons import prod
-from e3nn.util.codegen import CodeGenMixin
+from ._mixin import CodeGenMixin
 
-from ._tensor_product._codegen import _sum_tensors
+from ._codegen import _sum_tensors
 
 
 class Instruction(NamedTuple):
@@ -196,9 +196,9 @@ class Linear(CodeGenMixin, torch.nn.Module):
         self.irreps_out = irreps_out
         self.instructions = instructions
 
-        opt_defaults = e3nn.get_optimization_defaults()
-        self._optimize_einsums = _optimize_einsums if _optimize_einsums is not None else opt_defaults["optimize_einsums"]
-        del opt_defaults
+        # opt_defaults = e3nn.get_optimization_defaults()
+        self._optimize_einsums = _optimize_einsums if _optimize_einsums is not None else True
+        # del opt_defaults
 
         # == Generate code ==
         graphmod, self.weight_numel, self.bias_numel = _codegen_linear(
